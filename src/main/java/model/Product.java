@@ -3,18 +3,18 @@ package model;
 public class Product {
     int id;
     String name;
-    int price;
+    double price;
     int stock;
 
     public Product() {}
 
-    public Product(String name, int price, int stock) {
+    public Product(String name, double price, int stock) {
         this.name = name;
         this.price = price;
         this.stock = stock;
     }
 
-    public Product(int id, String name, int price, int stock) {
+    public Product(int id, String name, double price, int stock) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -37,7 +37,7 @@ public class Product {
         this.name = name;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
