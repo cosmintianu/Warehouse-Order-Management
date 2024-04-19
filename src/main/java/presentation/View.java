@@ -1,6 +1,7 @@
 package presentation;
 
 import model.Client;
+import model.Product;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -105,30 +106,14 @@ public class View {
         // Add more columns as needed
         productTable.setModel(productTableModel);
 
+        controller.showAllProductsInTable();
+
         // Add action listeners for buttons
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Implement add product functionality
-                // This could open a new window to enter product details
-            }
-        });
+        addButton.addActionListener(e -> showAddProductFrame());
 
-        editButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Implement edit product functionality
-                // This could open a dialog to select a product to edit
-            }
-        });
+        editButton.addActionListener(e -> showUpdateProductFrame());
 
-        deleteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Implement delete product functionality
-                // This could delete the selected product from the table and database
-            }
-        });
+        deleteButton.addActionListener(e -> showDeleteProductFrame());
 
         // Add components to the product operations window
         productFrame.add(operationPanel, BorderLayout.NORTH);
@@ -219,7 +204,7 @@ public class View {
                 String newEmail = emailField.getText();
 
                 // Create Client object with updated values
-                Client updatedClient = new Client(id,newName,newEmail,newAge);
+                Client updatedClient = new Client(id, newName, newEmail, newAge);
 
                 // Call the method in the controller to update the client
                 controller.updateClient(updatedClient);
@@ -278,8 +263,144 @@ public class View {
         deleteClientFrame.setVisible(true);
     }
 
+    private void showAddProductFrame() {
+        JFrame addProductFrame = new JFrame("Add Product");
+        addProductFrame.setLayout(new GridLayout(4, 2));
+
+        JLabel nameLabel = new JLabel("Name:");
+        JTextField nameField = new JTextField();
+
+        JLabel priceLabel = new JLabel("Price:");
+        JTextField priceField = new JTextField();
+
+        JLabel stockLabel = new JLabel("Stock:");
+        JTextField stockField = new JTextField();
+
+        JButton addButton = new JButton("Add Product");
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Get values from text fields
+                String name = nameField.getText();
+                double price = Double.parseDouble(priceField.getText());
+                int stock = Integer.parseInt(stockField.getText());
+
+                // Create Product object with entered values
+                Product product = new Product(name, price, stock);
+
+                // Call the method in the controller to add the product
+                controller.addProduct(product);
+
+                // Close the add product frame
+                addProductFrame.dispose();
+            }
+        });
+
+        addProductFrame.add(nameLabel);
+        addProductFrame.add(nameField);
+        addProductFrame.add(priceLabel);
+        addProductFrame.add(priceField);
+        addProductFrame.add(stockLabel);
+        addProductFrame.add(stockField);
+        addProductFrame.add(new JLabel());
+        addProductFrame.add(addButton);
+
+        addProductFrame.setSize(300, 200);
+        addProductFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        addProductFrame.setVisible(true);
+    }
+
+    private void showUpdateProductFrame() {
+        JFrame updateProductFrame = new JFrame("Update Product");
+        updateProductFrame.setLayout(new GridLayout(5, 2));
+
+        JLabel idLabel = new JLabel("Product ID:");
+        JTextField idField = new JTextField();
+
+        JLabel nameLabel = new JLabel("Name:");
+        JTextField nameField = new JTextField();
+
+        JLabel priceLabel = new JLabel("Price:");
+        JTextField priceField = new JTextField();
+
+        JLabel stockLabel = new JLabel("Stock:");
+        JTextField stockField = new JTextField();
+
+        JButton updateButton = new JButton("Update Product");
+        updateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Get values from text fields
+                int id = Integer.parseInt(idField.getText());
+                String newName = nameField.getText();
+                double newPrice = Double.parseDouble(priceField.getText());
+                int newStock = Integer.parseInt(stockField.getText());
+
+                // Create Product object with updated values
+                Product updatedProduct = new Product(id, newName, newPrice, newStock);
+
+                // Call the method in the controller to update the product
+                controller.updateProduct(updatedProduct);
+
+                // Close the update product frame
+                updateProductFrame.dispose();
+            }
+        });
+
+        updateProductFrame.add(idLabel);
+        updateProductFrame.add(idField);
+        updateProductFrame.add(nameLabel);
+        updateProductFrame.add(nameField);
+        updateProductFrame.add(priceLabel);
+        updateProductFrame.add(priceField);
+        updateProductFrame.add(stockLabel);
+        updateProductFrame.add(stockField);
+        updateProductFrame.add(new JLabel());
+        updateProductFrame.add(updateButton);
+
+        updateProductFrame.setSize(300, 200);
+        updateProductFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        updateProductFrame.setVisible(true);
+    }
+
+    private void showDeleteProductFrame() {
+        JFrame deleteProductFrame = new JFrame("Delete Product");
+        deleteProductFrame.setLayout(new GridLayout(2, 2));
+
+        JLabel idLabel = new JLabel("Product ID:");
+        JTextField idField = new JTextField();
+
+        JButton deleteButton = new JButton("Delete Product");
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Get the ID entered by the user
+                int productId = Integer.parseInt(idField.getText());
+
+                // Call the method in the controller to delete the product
+                controller.deleteProduct(productId);
+
+                // Close the delete product frame
+                deleteProductFrame.dispose();
+            }
+        });
+
+        deleteProductFrame.add(idLabel);
+        deleteProductFrame.add(idField);
+        deleteProductFrame.add(new JLabel());
+        deleteProductFrame.add(deleteButton);
+
+        deleteProductFrame.setSize(300, 100);
+        deleteProductFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        deleteProductFrame.setVisible(true);
+    }
+
 
     public DefaultTableModel getClientTableModel() {
         return clientTableModel;
+    }
+
+    public DefaultTableModel getProductTableModel() {
+        return productTableModel;
     }
 }
