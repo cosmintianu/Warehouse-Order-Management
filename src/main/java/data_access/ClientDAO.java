@@ -1,2 +1,11 @@
-package data_access;public class ClientDAO {
+package data_access;
+
+import model.Client;
+
+public class ClientDAO extends AbstractDAO<Client> {
+    public ClientDAO() {
+        super();
+    }
+
+
 }
