@@ -26,6 +26,9 @@ public class AbstractDAO<T> {
         List<T> entities = new ArrayList<>();
         Connection connection = ConnectionFactory.getConnection();;
         String tableName = type.getSimpleName().toLowerCase();
+        if(tableName.equals("bill")){
+            tableName="log";
+        }
         String query = "SELECT * FROM " + tableName;
 
         try (PreparedStatement statement = connection.prepareStatement(query);
@@ -51,6 +54,9 @@ public class AbstractDAO<T> {
     public boolean insert(T entity) {
         Connection connection = ConnectionFactory.getConnection();
         String tableName = entity.getClass().getSimpleName().toLowerCase(); // Assumes table name is the same as class name
+        if(tableName.equals("bill")){
+            tableName="log";
+        }
         StringBuilder queryBuilder = new StringBuilder("INSERT INTO ");
         queryBuilder.append(tableName).append(" (");
 

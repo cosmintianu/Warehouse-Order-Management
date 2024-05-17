@@ -1,6 +1,7 @@
 package presentation;
 
 import model.Client;
+import model.Orders;
 import model.Product;
 
 import javax.swing.*;
@@ -8,12 +9,15 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class View {
     private Controller controller;
     private JFrame mainFrame;
     private DefaultTableModel clientTableModel;
     private DefaultTableModel productTableModel;
+    private DefaultTableModel orderTableModel;
+    private DefaultTableModel billsTableModel;
 
     public View() {
         controller = new Controller(this);
@@ -24,21 +28,46 @@ public class View {
         // Add buttons for client operations and product operations
         JButton clientButton = new JButton("Client Operations");
         JButton productButton = new JButton("Product Operations");
-        JButton orderButton = new JButton("Create Product Order");
+        JButton orderButton = new JButton("Order Operations");
+        JButton billButton = new JButton("View Bills");
 
         // Add action listeners for buttons
         clientButton.addActionListener(e -> showClientOperationsWindow());
 
         productButton.addActionListener(e -> showProductOperationsWindow());
 
-        orderButton.addActionListener(e -> showCreateOrderWindow());
+        orderButton.addActionListener(e -> showOrderOperationsWindow());
+
+        billButton.addActionListener(e -> showBillsWindow());
 
         mainFrame.add(clientButton);
         mainFrame.add(productButton);
         mainFrame.add(orderButton);
+        mainFrame.add(billButton);
 
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setVisible(true);
+    }
+
+    private void showBillsWindow(){
+        JFrame billsFrame = new JFrame("View Bills");
+        billsFrame.setLayout(new BorderLayout());
+
+        // Create a table to display bills
+        JTable billsTable = new JTable();
+        JScrollPane scrollPane = new JScrollPane(billsTable);
+        billsTableModel = new DefaultTableModel();
+
+        billsTable.setModel(billsTableModel);
+
+        controller.showAllBillsInTable();
+
+        // Add components to the client operations window
+        billsFrame.add(scrollPane, BorderLayout.CENTER);
+
+        billsFrame.setSize(600, 400);
+        billsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        billsFrame.setVisible(true);
     }
 
     private void showClientOperationsWindow() {
@@ -58,11 +87,8 @@ public class View {
         JTable clientTable = new JTable();
         JScrollPane scrollPane = new JScrollPane(clientTable);
         clientTableModel = new DefaultTableModel();
-        clientTableModel.addColumn("ID");
-        clientTableModel.addColumn("Name");
-        clientTableModel.addColumn("E-mail");
-        clientTableModel.addColumn("Age");
-        // Add more columns as needed
+
+
         clientTable.setModel(clientTableModel);
 
         controller.showAllClientsInTable();
@@ -99,10 +125,7 @@ public class View {
         JTable productTable = new JTable();
         JScrollPane scrollPane = new JScrollPane(productTable);
         productTableModel = new DefaultTableModel();
-        productTableModel.addColumn("ID");
-        productTableModel.addColumn("Name");
-        productTableModel.addColumn("Price");
-        productTableModel.addColumn("Stock");
+
         // Add more columns as needed
         productTable.setModel(productTableModel);
 
@@ -124,10 +147,109 @@ public class View {
         productFrame.setVisible(true);
     }
 
+    private void showOrderOperationsWindow() {
+        JFrame productFrame = new JFrame("Order Operations");
+        productFrame.setLayout(new BorderLayout());
+
+        // Create a panel for product operations
+        JPanel operationPanel = new JPanel();
+        JButton createButton = new JButton("Create order");
+
+        operationPanel.add(createButton);
+
+
+        // Create a table to display products
+        JTable orderTable = new JTable();
+        JScrollPane scrollPane = new JScrollPane(orderTable);
+        orderTableModel = new DefaultTableModel();
+        orderTable.setModel(orderTableModel);
+
+        controller.showAllOrdersInTable();
+
+        // Add action listeners for buttons
+        createButton.addActionListener(e -> showCreateOrderWindow());
+
+        // Add components to the product operations window
+        productFrame.add(operationPanel, BorderLayout.NORTH);
+        productFrame.add(scrollPane, BorderLayout.CENTER);
+
+        productFrame.setSize(600, 400);
+        productFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        productFrame.setVisible(true);
+    }
+
     private void showCreateOrderWindow() {
         JFrame orderFrame = new JFrame("Create Product Order");
-        // Add components for creating product orders
-        orderFrame.setSize(600, 400);
+        orderFrame.setLayout(new GridLayout(4, 2));
+
+        JLabel productLabel = new JLabel("Select Product:");
+        ArrayList<String[]> products = controller.getProductsNameAndId();
+        String[] productsNames =  products.getFirst();
+        String[] productsIds =  products.get(1);
+        JComboBox<String> productComboBox = new JComboBox<>(productsNames);
+
+        JLabel clientLabel = new JLabel("Select Client:");
+        ArrayList<String[]> clients = controller.getClientsNameAndId();
+        String[] clientsNames = clients.getFirst();
+        String[] clientsIds = clients.get(1);
+        JComboBox<String> clientComboBox = new JComboBox<>(clientsNames);
+
+        JLabel quantityLabel = new JLabel("Quantity:");
+        JTextField quantityField = new JTextField();
+
+        JButton createOrderButton = new JButton("Create Order");
+        createOrderButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Get selected product, client, and quantity
+                String selectedProduct = (String) productComboBox.getSelectedItem();
+                int i=0;
+                for(String s : productsNames){
+                    if(s.equals(selectedProduct)){
+                        break;
+                    }
+                    i++;
+                }
+                int selectedProductId = Integer.parseInt(productsIds[i]);
+
+                String selectedClient = (String) clientComboBox.getSelectedItem();
+                i=0;
+                for(String s: clientsNames){
+                    if(s.equals(selectedClient)){
+                        break;
+                    }
+                    i++;
+                }
+                int selectedClientId = Integer.parseInt(clientsIds[i]);
+
+                int quantity = Integer.parseInt(quantityField.getText()); // Assuming quantity is always valid
+
+                Orders order = new Orders(selectedClientId, selectedProductId, quantity);
+                if(!controller.addOrder(order)) {
+                    JOptionPane.showMessageDialog(orderFrame, "Not enough stock of the selected product.", "Error", JOptionPane.ERROR_MESSAGE);
+                }else {
+                    // You can handle the order creation here, e.g., pass the data to the controller
+//                    System.out.println("Creating order for Product: " + selectedProduct +
+//                            "with id" + selectedProductId +
+//                            ", Client: " + selectedClientId +
+//                            ", Quantity: " + quantity);
+
+                    // Close the order frame
+                    orderFrame.dispose();
+                }
+            }
+        });
+
+        orderFrame.add(productLabel);
+        orderFrame.add(productComboBox);
+        orderFrame.add(clientLabel);
+        orderFrame.add(clientComboBox);
+        orderFrame.add(quantityLabel);
+        orderFrame.add(quantityField);
+        orderFrame.add(new JLabel());
+        orderFrame.add(createOrderButton);
+
+        orderFrame.setSize(400, 200);
         orderFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         orderFrame.setVisible(true);
     }
@@ -402,5 +524,13 @@ public class View {
 
     public DefaultTableModel getProductTableModel() {
         return productTableModel;
+    }
+
+    public DefaultTableModel getOrderTableModel() {
+        return orderTableModel;
+    }
+
+    public DefaultTableModel getBillsTableModel() {
+        return billsTableModel;
     }
 }
