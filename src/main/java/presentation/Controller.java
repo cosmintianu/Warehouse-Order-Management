@@ -17,6 +17,10 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The Controller class acts as an intermediary between the View and the Business Logic Layer.
+ * It handles user interactions and coordinates actions between the view and business logic layers.
+ */
 public class Controller {
     private ClientBLL clientBLL;
     private ProductBLL productBLL;
@@ -24,6 +28,11 @@ public class Controller {
     private BillBLL billBLL;
     private View view;
 
+    /**
+     * Constructs a new Controller instance.
+     *
+     * @param view The view component associated with the controller.
+     */
     public Controller(View view) {
         this.view = view;
         this.clientBLL = new ClientBLL(); // Instantiate ClientDAO
@@ -32,7 +41,9 @@ public class Controller {
         this.billBLL = new BillBLL();
     }
 
-    // Method to fetch all clients from the database and update the JTable
+    /**
+     * Retrieves all clients from the database and updates the client table in the GUI.
+     */
     public void showAllClientsInTable() {
         // Fetch all clients from the database using ClientDAO
         List<Client> clients = clientBLL.findAll();
@@ -53,24 +64,42 @@ public class Controller {
         }
     }
 
+    /**
+     * Adds a new client to the database.
+     *
+     * @param client The client object to be added.
+     */
     public void addClient(Client client) {
         clientBLL.insert(client);
         // Optionally, you can refresh the client table in the GUI after adding the client
         showAllClientsInTable();
     }
 
+    /**
+     * Updates an existing client in the database.
+     *
+     * @param client The client object to be updated.
+     */
     public void updateClient(Client client){
         clientBLL.update(client);
 
         showAllClientsInTable();
     }
 
+    /**
+     * Deletes a client from the database based on the provided ID.
+     *
+     * @param id The ID of the client to be deleted.
+     */
     public void deleteClient(int id){
         clientBLL.delete(id);
 
         showAllClientsInTable();
     }
 
+    /**
+     * Retrieves all products from the database and updates the products table in the GUI.
+     */
     public void showAllProductsInTable() {
         // Fetch all clients from the database using ClientDAO
         List<Product> products = productBLL.findAll();
@@ -100,24 +129,44 @@ public class Controller {
         }
     }
 
+    /**
+     * Adds a new product to the database.
+     *
+     * @param product The product object to be added.
+     */
     public void addProduct(Product product) {
         productBLL.insert(product);
 
         showAllProductsInTable();
     }
 
+    /**
+     * Updates an existing product in the database.
+     *
+     * @param product The product object to be updated.
+     */
     public void updateProduct(Product product){
         productBLL.update(product);
 
         showAllProductsInTable();
     }
 
+    /**
+     * Deletes a product from the database based on the provided ID.
+     *
+     * @param id The ID of the product to be deleted.
+     */
     public void deleteProduct(int id){
         productBLL.delete(id);
 
         showAllProductsInTable();
     }
 
+    /**
+     * Retrieves the names and IDs of all clients from the database.
+     *
+     * @return An ArrayList containing two arrays: one for client names and one for client IDs.
+     */
     public ArrayList<String[]> getClientsNameAndId() {
         // Fetch all clients from the database using ClientDAO
         List<Client> clients = clientBLL.findAll();
@@ -135,6 +184,12 @@ public class Controller {
 
         return result;
     }
+
+    /**
+     * Retrieves the names and IDs of all products from the database.
+     *
+     * @return An ArrayList containing two arrays: one for product names and one for product IDs.
+     */
     public ArrayList<String[]> getProductsNameAndId() {
         // Fetch all clients from the database using ClientDAO
         List<Product> products = productBLL.findAll();
@@ -153,6 +208,12 @@ public class Controller {
         return result;
     }
 
+    /**
+     * Adds a new order to the database and updates the orders table in the GUI.
+     *
+     * @param order The order object to be added.
+     * @return True if the order was successfully added, false otherwise.
+     */
     public boolean addOrder(Orders order) {
         if(!ordersBLL.addOrder(order)){
             return false;
@@ -163,6 +224,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Retrieves all orders from the database and updates the orders table in the GUI.
+     */
     public void showAllOrdersInTable() {
         // Fetch all clients from the database using ClientDAO
         List<Orders> orders = ordersBLL.findAll();
@@ -183,6 +247,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Retrieves all bills from the database and updates the bills table in the GUI.
+     */
     public void showAllBillsInTable() {
         List<Bill> bills = billBLL.findAll();
 
@@ -192,7 +259,6 @@ public class Controller {
         model.setRowCount(0);
         model.setColumnCount(0);
 
-        // Add columns to the table model based on fields
         for (Field field : fields) {
             model.addColumn(field.getName());
         }

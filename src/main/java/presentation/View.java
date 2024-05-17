@@ -19,6 +19,9 @@ public class View {
     private DefaultTableModel orderTableModel;
     private DefaultTableModel billsTableModel;
 
+    /**
+     * Constructs a new View instance.
+     */
     public View() {
         controller = new Controller(this);
         mainFrame = new JFrame("Inventory Management System");
@@ -49,6 +52,9 @@ public class View {
         mainFrame.setVisible(true);
     }
 
+    /**
+     * Displays the window for viewing bills.
+     */
     private void showBillsWindow(){
         JFrame billsFrame = new JFrame("View Bills");
         billsFrame.setLayout(new BorderLayout());
@@ -70,6 +76,9 @@ public class View {
         billsFrame.setVisible(true);
     }
 
+    /**
+     * Displays the window for client operations.
+     */
     private void showClientOperationsWindow() {
         JFrame clientFrame = new JFrame("Client Operations");
         clientFrame.setLayout(new BorderLayout());
@@ -108,6 +117,9 @@ public class View {
         clientFrame.setVisible(true);
     }
 
+    /**
+     * Displays the window for product operations.
+     */
     private void showProductOperationsWindow() {
         JFrame productFrame = new JFrame("Product Operations");
         productFrame.setLayout(new BorderLayout());
@@ -147,6 +159,9 @@ public class View {
         productFrame.setVisible(true);
     }
 
+    /**
+     * Displays the window for order operations.
+     */
     private void showOrderOperationsWindow() {
         JFrame productFrame = new JFrame("Order Operations");
         productFrame.setLayout(new BorderLayout());
@@ -178,6 +193,9 @@ public class View {
         productFrame.setVisible(true);
     }
 
+    /**
+     * Displays the window for creating a new order.
+     */
     private void showCreateOrderWindow() {
         JFrame orderFrame = new JFrame("Create Product Order");
         orderFrame.setLayout(new GridLayout(4, 2));
@@ -254,6 +272,9 @@ public class View {
         orderFrame.setVisible(true);
     }
 
+    /**
+     * Displays the window for adding a new client.
+     */
     private void showAddClientFrame() {
         JFrame addClientFrame = new JFrame("Add Client");
         addClientFrame.setLayout(new GridLayout(4, 2));
@@ -299,6 +320,9 @@ public class View {
         addClientFrame.setVisible(true);
     }
 
+    /**
+     * Displays the window for updating an existing client.
+     */
     private void showUpdateClientFrame() {
         JFrame updateClientFrame = new JFrame("Update Client");
         updateClientFrame.setLayout(new GridLayout(5, 2));
@@ -352,7 +376,9 @@ public class View {
         updateClientFrame.setVisible(true);
     }
 
-
+    /**
+     * Displays the window for deleting an existing client.
+     */
     private void showDeleteClientFrame() {
         JFrame deleteClientFrame = new JFrame("Delete Client");
         deleteClientFrame.setLayout(new GridLayout(2, 2));
@@ -385,6 +411,9 @@ public class View {
         deleteClientFrame.setVisible(true);
     }
 
+    /**
+     * Displays the window for adding a new product.
+     */
     private void showAddProductFrame() {
         JFrame addProductFrame = new JFrame("Add Product");
         addProductFrame.setLayout(new GridLayout(4, 2));
@@ -432,6 +461,9 @@ public class View {
         addProductFrame.setVisible(true);
     }
 
+    /**
+     * Displays the window for updating an existing product.
+     */
     private void showUpdateProductFrame() {
         JFrame updateProductFrame = new JFrame("Update Product");
         updateProductFrame.setLayout(new GridLayout(5, 2));
@@ -485,6 +517,9 @@ public class View {
         updateProductFrame.setVisible(true);
     }
 
+    /**
+     * Displays the window for deleting an existing product.
+     */
     private void showDeleteProductFrame() {
         JFrame deleteProductFrame = new JFrame("Delete Product");
         deleteProductFrame.setLayout(new GridLayout(2, 2));

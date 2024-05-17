@@ -11,13 +11,26 @@ import java.util.List;
 
 import static connection.ConnectionFactory.getConnection;
 
+/**
+ * Provides data access functionality for bills.
+ */
 public class BillDAO extends AbstractDAO<Bill> {
+
+    /**
+     * Constructs a new BillDAO instance.
+     */
     public BillDAO() {
         super();
     }
+
+    /**
+     * Retrieves a list of all bills from the database.
+     *
+     * @return A list of Bill objects representing the bills.
+     */
     @Override
     public List<Bill> findAll() {
-        List <Bill> bills = new ArrayList<>();
+        List<Bill> bills = new ArrayList<>();
         String query = "SELECT id, orderId, total FROM log";
 
         try (Connection conn = getConnection();

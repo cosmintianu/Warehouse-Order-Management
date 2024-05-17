@@ -12,16 +12,28 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-
+/**
+ * Provides common data access functionality for DAO classes.
+ *
+ * @param &lt;T&gt; The type of entity managed by the DAO.
+ */
 public class AbstractDAO<T> {
     protected static final Logger LOGGER = Logger.getLogger(AbstractDAO.class.getName());
 
+    /**
+     * Constructs a new AbstractDAO instance.
+     */
     private final Class<T> type;
     @SuppressWarnings("unchecked")
     public AbstractDAO() {
         this.type = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
 
+    /**
+     * Retrieves a list of all entities from the database.
+     *
+     * @return A list of entities.
+     */
     public List<T> findAll() {
         List<T> entities = new ArrayList<>();
         Connection connection = ConnectionFactory.getConnection();;
@@ -51,6 +63,12 @@ public class AbstractDAO<T> {
         return entities;
     }
 
+    /**
+     * Inserts an entity into the database.
+     *
+     * @param entity The entity to be inserted.
+     * @return true if the insertion was successful, false otherwise.
+     */
     public boolean insert(T entity) {
         Connection connection = ConnectionFactory.getConnection();
         String tableName = entity.getClass().getSimpleName().toLowerCase(); // Assumes table name is the same as class name
@@ -89,6 +107,12 @@ public class AbstractDAO<T> {
         return false;
     }
 
+    /**
+     * Updates an entity in the database.
+     *
+     * @param entity The entity to be updated.
+     * @return true if the update was successful, false otherwise.
+     */
     public boolean update(T entity) {
         Connection connection = ConnectionFactory.getConnection();
         String tableName = entity.getClass().getSimpleName().toLowerCase(); // Assumes table name is the same as class name
@@ -129,7 +153,12 @@ public class AbstractDAO<T> {
         return false;
     }
 
-
+    /**
+     * Deletes an entity from the database based on its ID.
+     *
+     * @param id The ID of the entity to be deleted.
+     * @return true if the deletion was successful, false otherwise.
+     */
     public boolean delete(int id) {
         Connection connection = ConnectionFactory.getConnection();
         String tableName = type.getSimpleName().toLowerCase(); // Assumes table name is the same as class name
@@ -147,8 +176,13 @@ public class AbstractDAO<T> {
         return false;
     }
 
-
-
+    /**
+     * Closes the database connection and associated resources.
+     *
+     * @param connection The database connection to be closed.
+     * @param statement  The prepared statement to be closed.
+     * @param resultSet  The result set to be closed.
+     */
     private void closeResources(Connection connection, PreparedStatement statement, ResultSet resultSet) {
         try {
             if (resultSet != null) {
@@ -165,6 +199,13 @@ public class AbstractDAO<T> {
         }
     }
 
+    /**
+     * Retrieves the ID of an entity.
+     *
+     * @param entity The entity from which to retrieve the ID.
+     * @return The ID of the entity.
+     * @throws IllegalAccessException If the ID field cannot be accessed.
+     */
     private Object getEntityId(T entity) throws IllegalAccessException {
         Field[] fields = entity.getClass().getDeclaredFields();
         for (Field field : fields) {

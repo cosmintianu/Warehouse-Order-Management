@@ -6,27 +6,52 @@ import model.Client;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 
+/**
+ * Provides business logic operations related to clients.
+ */
 public class ClientBLL {
-    ClientDAO clientDAO;
+    private final ClientDAO clientDAO;
 
+    /**
+     * Constructs a new ClientBLL instance.
+     */
     public ClientBLL() {
         this.clientDAO = new ClientDAO();
     }
 
+    /**
+     * Retrieves a list of all clients.
+     *
+     * @return A list of Client objects representing the clients.
+     */
     public List<Client> findAll() {
-        // Fetch all clients from the database using ClientDAO
         return clientDAO.findAll();
     }
 
+    /**
+     * Inserts a new client into the database.
+     *
+     * @param client The Client object to be inserted.
+     */
     public void insert(Client client) {
         clientDAO.insert(client);
     }
 
-    public void update(Client client){
+    /**
+     * Updates an existing client in the database.
+     *
+     * @param client The Client object to be updated.
+     */
+    public void update(Client client) {
         clientDAO.update(client);
     }
 
-    public void delete(int id){
+    /**
+     * Deletes a client from the database based on its ID.
+     *
+     * @param id The ID of the client to be deleted.
+     */
+    public void delete(int id) {
         clientDAO.delete(id);
     }
 }

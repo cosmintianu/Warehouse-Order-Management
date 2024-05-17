@@ -9,16 +9,29 @@ import model.Product;
 
 import java.util.List;
 
+/**
+ * Provides business logic operations related to orders.
+ */
 public class OrdersBLL {
     private OrderDAO orderDAO;
     private ProductDAO productDAO;
     private BillDAO billDAO;
+
+    /**
+     * Constructs a new OrdersBLL instance.
+     */
     public OrdersBLL() {
         this.orderDAO = new OrderDAO();
         this.productDAO = new ProductDAO();
         this.billDAO = new BillDAO();
     }
 
+    /**
+     * Adds a new order to the system.
+     *
+     * @param order The Orders object representing the order to be added.
+     * @return true if the order was successfully added, false otherwise.
+     */
     public boolean addOrder(Orders order){
         List<Product> products = productDAO.findAll();
         int i = 0;
@@ -50,6 +63,11 @@ public class OrdersBLL {
         }
     }
 
+    /**
+     * Retrieves a list of all orders.
+     *
+     * @return A list of Orders objects representing the orders.
+     */
     public List<Orders> findAll(){
         return orderDAO.findAll();
     }
