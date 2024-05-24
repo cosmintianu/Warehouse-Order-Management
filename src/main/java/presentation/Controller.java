@@ -4,9 +4,6 @@ import business_logic.BillBLL;
 import business_logic.ClientBLL;
 import business_logic.OrdersBLL;
 import business_logic.ProductBLL;
-import data_access.ClientDAO;
-import data_access.OrderDAO;
-import data_access.ProductDAO;
 import model.Bill;
 import model.Client;
 import model.Orders;
@@ -35,32 +32,71 @@ public class Controller {
      */
     public Controller(View view) {
         this.view = view;
-        this.clientBLL = new ClientBLL(); // Instantiate ClientDAO
+        this.clientBLL = new ClientBLL();
         this.productBLL = new ProductBLL();
         this.ordersBLL = new OrdersBLL();
         this.billBLL = new BillBLL();
     }
 
     /**
-     * Retrieves all clients from the database and updates the client table in the GUI.
+     * Retrieves all objects<?></?> from the database.
+     */
+    public Object[][] getTableContent(List<?> list) {
+        if (list == null || list.isEmpty()) {
+            return new Object[0][0];
+        }
+
+        Field[] fields = list.getFirst().getClass().getDeclaredFields();
+
+        Object[][] tableData = new Object[list.size() + 1][fields.length];
+
+        tableData[0] = fields;
+
+        for (int i = 1; i < list.size() + 1; i++) {
+            Object obj = list.get(i - 1);
+            for (int j = 0; j < fields.length; j++) {
+                fields[j].setAccessible(true);
+                try {
+                    tableData[i][j] = fields[j].get(obj);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return tableData;
+    }
+
+    /**
+     * Updates the client table in the GUI.
      */
     public void showAllClientsInTable() {
-        // Fetch all clients from the database using ClientDAO
         List<Client> clients = clientBLL.findAll();
 
-        // Update the JTable in the GUI
         DefaultTableModel model = view.getClientTableModel();
-        Field[] fields = Client.class.getDeclaredFields();
 
-        // Set the columns based on the fields
-        model.setColumnCount(0); // Clear existing columns
-        for (Field field : fields) {
-            model.addColumn(field.getName());
+        Object[][] aux = getTableContent(clients);
+
+        Field[] fields = (Field[]) aux[0];
+
+        Object[][] tableData= new Object[clients.size()][fields.length];
+
+        for (int i = 1; i < aux.length; i++) {
+            for (int j = 0; j < aux[i].length; j++) {
+                tableData[i-1][j] = aux[i][j];
+            }
+            System.out.println();
         }
-        model.setRowCount(0); // Clear existing rows
-        for (Client client : clients) {
-            Object[] row = {client.getId(), client.getName(), client.getEmail(), client.getAge()};
-            model.addRow(row);
+
+        // Get column names
+        if (!clients.isEmpty()) {
+            String[] columnNames = new String[fields.length];
+
+            for (int i = 1; i < fields.length; i++) {
+                columnNames[i] = fields[i].getName();
+            }
+
+            model.setDataVector(tableData, columnNames);
         }
     }
 
@@ -71,7 +107,6 @@ public class Controller {
      */
     public void addClient(Client client) {
         clientBLL.insert(client);
-        // Optionally, you can refresh the client table in the GUI after adding the client
         showAllClientsInTable();
     }
 
@@ -98,34 +133,36 @@ public class Controller {
     }
 
     /**
-     * Retrieves all products from the database and updates the products table in the GUI.
+     * Updates the products table in the GUI.
      */
     public void showAllProductsInTable() {
-        // Fetch all clients from the database using ClientDAO
         List<Product> products = productBLL.findAll();
 
-        // Update the JTable in the GUI
         DefaultTableModel model = view.getProductTableModel();
-        Field[] fields = Product.class.getDeclaredFields();
 
-        // Set the columns based on the fields
-        model.setColumnCount(0); // Clear existing columns
-        for (Field field : fields) {
-            model.addColumn(field.getName());
-        }
-        model.setRowCount(0); // Clear existing rows
+        Object[][] aux = getTableContent(products);
 
-        for (Product product : products) {
-            Object[] row = new Object[fields.length];
-            for (int i = 0; i < fields.length; i++) {
-                fields[i].setAccessible(true); // Make private fields accessible
-                try {
-                    row[i] = fields[i].get(product);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
+        Field[] fields = (Field[]) aux[0];
+
+        Object[][] tableData= new Object[products.size()][fields.length];
+
+        for (int i = 1; i < aux.length; i++) {
+            for (int j = 0; j < aux[i].length; j++) {
+                tableData[i-1][j] = aux[i][j];
             }
-            model.addRow(row);
+            System.out.println();
+        }
+
+
+        // Get column names
+        if (!products.isEmpty()) {
+            String[] columnNames = new String[fields.length];
+
+            for (int i = 1; i < fields.length; i++) {
+                columnNames[i] = fields[i].getName();
+            }
+
+            model.setDataVector(tableData, columnNames);
         }
     }
 
@@ -228,19 +265,16 @@ public class Controller {
      * Retrieves all orders from the database and updates the orders table in the GUI.
      */
     public void showAllOrdersInTable() {
-        // Fetch all clients from the database using ClientDAO
         List<Orders> orders = ordersBLL.findAll();
 
-        // Update the JTable in the GUI
         DefaultTableModel model = view.getOrderTableModel();
         Field[] fields = Orders.class.getDeclaredFields();
 
-        // Set the columns based on the fields
-        model.setColumnCount(0); // Clear existing columns
+        model.setColumnCount(0);
         for (Field field : fields) {
             model.addColumn(field.getName());
         }
-        model.setRowCount(0); // Clear existing rows
+        model.setRowCount(0);
         for (Orders order : orders) {
             Object[] row = {order.getId(), order.getClientId(), order.getProductId(), order.getQuantity()};
             model.addRow(row);
@@ -275,6 +309,21 @@ public class Controller {
                 }
             }
             model.addRow(rowData);
+        }
+    }
+
+    public static void retrieveProperties(Object object) {
+
+        for (Field field : object.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+
+            Object value;
+            try {
+                value = field.get(object);
+                System.out.println(field.getName() + "=" + value);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

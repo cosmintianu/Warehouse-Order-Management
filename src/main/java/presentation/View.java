@@ -28,13 +28,11 @@ public class View {
         mainFrame.setSize(600, 400);
         mainFrame.setLayout(new GridLayout(3, 1));
 
-        // Add buttons for client operations and product operations
         JButton clientButton = new JButton("Client Operations");
         JButton productButton = new JButton("Product Operations");
         JButton orderButton = new JButton("Order Operations");
         JButton billButton = new JButton("View Bills");
 
-        // Add action listeners for buttons
         clientButton.addActionListener(e -> showClientOperationsWindow());
 
         productButton.addActionListener(e -> showProductOperationsWindow());
@@ -59,7 +57,6 @@ public class View {
         JFrame billsFrame = new JFrame("View Bills");
         billsFrame.setLayout(new BorderLayout());
 
-        // Create a table to display bills
         JTable billsTable = new JTable();
         JScrollPane scrollPane = new JScrollPane(billsTable);
         billsTableModel = new DefaultTableModel();
@@ -68,7 +65,6 @@ public class View {
 
         controller.showAllBillsInTable();
 
-        // Add components to the client operations window
         billsFrame.add(scrollPane, BorderLayout.CENTER);
 
         billsFrame.setSize(600, 400);
@@ -83,7 +79,6 @@ public class View {
         JFrame clientFrame = new JFrame("Client Operations");
         clientFrame.setLayout(new BorderLayout());
 
-        // Create a panel for client operations
         JPanel operationPanel = new JPanel();
         JButton addButton = new JButton("Add Client");
         JButton editButton = new JButton("Edit Client");
@@ -92,23 +87,20 @@ public class View {
         operationPanel.add(editButton);
         operationPanel.add(deleteButton);
 
-        // Create a table to display clients
         JTable clientTable = new JTable();
         JScrollPane scrollPane = new JScrollPane(clientTable);
         clientTableModel = new DefaultTableModel();
 
-
         clientTable.setModel(clientTableModel);
 
         controller.showAllClientsInTable();
-        // Add action listeners for buttons
+
         addButton.addActionListener(e -> showAddClientFrame());
 
         editButton.addActionListener(e -> showUpdateClientFrame());
 
         deleteButton.addActionListener(e -> showDeleteClientFrame());
 
-        // Add components to the client operations window
         clientFrame.add(operationPanel, BorderLayout.NORTH);
         clientFrame.add(scrollPane, BorderLayout.CENTER);
 
@@ -124,7 +116,6 @@ public class View {
         JFrame productFrame = new JFrame("Product Operations");
         productFrame.setLayout(new BorderLayout());
 
-        // Create a panel for product operations
         JPanel operationPanel = new JPanel();
         JButton addButton = new JButton("Add Product");
         JButton editButton = new JButton("Edit Product");
@@ -133,24 +124,20 @@ public class View {
         operationPanel.add(editButton);
         operationPanel.add(deleteButton);
 
-        // Create a table to display products
         JTable productTable = new JTable();
         JScrollPane scrollPane = new JScrollPane(productTable);
         productTableModel = new DefaultTableModel();
 
-        // Add more columns as needed
         productTable.setModel(productTableModel);
 
         controller.showAllProductsInTable();
 
-        // Add action listeners for buttons
         addButton.addActionListener(e -> showAddProductFrame());
 
         editButton.addActionListener(e -> showUpdateProductFrame());
 
         deleteButton.addActionListener(e -> showDeleteProductFrame());
 
-        // Add components to the product operations window
         productFrame.add(operationPanel, BorderLayout.NORTH);
         productFrame.add(scrollPane, BorderLayout.CENTER);
 
@@ -166,14 +153,11 @@ public class View {
         JFrame productFrame = new JFrame("Order Operations");
         productFrame.setLayout(new BorderLayout());
 
-        // Create a panel for product operations
         JPanel operationPanel = new JPanel();
         JButton createButton = new JButton("Create order");
 
         operationPanel.add(createButton);
 
-
-        // Create a table to display products
         JTable orderTable = new JTable();
         JScrollPane scrollPane = new JScrollPane(orderTable);
         orderTableModel = new DefaultTableModel();
@@ -181,10 +165,8 @@ public class View {
 
         controller.showAllOrdersInTable();
 
-        // Add action listeners for buttons
         createButton.addActionListener(e -> showCreateOrderWindow());
 
-        // Add components to the product operations window
         productFrame.add(operationPanel, BorderLayout.NORTH);
         productFrame.add(scrollPane, BorderLayout.CENTER);
 
@@ -240,7 +222,7 @@ public class View {
                 }
                 int selectedClientId = Integer.parseInt(clientsIds[i]);
 
-                int quantity = Integer.parseInt(quantityField.getText()); // Assuming quantity is always valid
+                int quantity = Integer.parseInt(quantityField.getText());
 
                 Orders order = new Orders(selectedClientId, selectedProductId, quantity);
                 if(!controller.addOrder(order)) {
@@ -290,18 +272,14 @@ public class View {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Get values from text fields
                 String name = nameField.getText();
-                int age = Integer.parseInt(ageField.getText()); // Assuming age is an integer
+                int age = Integer.parseInt(ageField.getText());
                 String email = emailField.getText();
 
-                // Create Client object with entered values
                 Client client = new Client(name, email, age);
 
-                // Call the method in the controller to add the client
                 controller.addClient(client);
 
-                // Close the add client frame
                 addClientFrame.dispose();
             }
         });
@@ -343,19 +321,15 @@ public class View {
         updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Get values from text fields
                 int id = Integer.parseInt(idField.getText());
                 String newName = nameField.getText();
                 int newAge = Integer.parseInt(ageField.getText()); // Assuming age is an integer
                 String newEmail = emailField.getText();
 
-                // Create Client object with updated values
                 Client updatedClient = new Client(id, newName, newEmail, newAge);
 
-                // Call the method in the controller to update the client
                 controller.updateClient(updatedClient);
 
-                // Close the update client frame
                 updateClientFrame.dispose();
             }
         });
@@ -390,13 +364,10 @@ public class View {
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Get the ID entered by the user
                 int clientId = Integer.parseInt(idField.getText());
 
-                // Call the method in the controller to delete the client
                 controller.deleteClient(clientId);
 
-                // Close the delete client frame
                 deleteClientFrame.dispose();
             }
         });
@@ -484,19 +455,15 @@ public class View {
         updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Get values from text fields
                 int id = Integer.parseInt(idField.getText());
                 String newName = nameField.getText();
                 double newPrice = Double.parseDouble(priceField.getText());
                 int newStock = Integer.parseInt(stockField.getText());
 
-                // Create Product object with updated values
                 Product updatedProduct = new Product(id, newName, newPrice, newStock);
 
-                // Call the method in the controller to update the product
                 controller.updateProduct(updatedProduct);
 
-                // Close the update product frame
                 updateProductFrame.dispose();
             }
         });
@@ -531,13 +498,10 @@ public class View {
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Get the ID entered by the user
                 int productId = Integer.parseInt(idField.getText());
 
-                // Call the method in the controller to delete the product
                 controller.deleteProduct(productId);
 
-                // Close the delete product frame
                 deleteProductFrame.dispose();
             }
         });
